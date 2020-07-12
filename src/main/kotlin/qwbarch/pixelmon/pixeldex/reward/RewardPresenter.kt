@@ -39,7 +39,7 @@ class RewardPresenter(configHandler: ConfigHandler) {
         if (ProgressChecker.hasUnclaimedRewards(player)) {
             val rewardLevel = claimedLevel.next()
             val reward = rewards[rewardLevel]!!
-            rewardItems(player, rewardLevel, reward)
+            rewardItems(player, rewardLevel, reward.copy()) //Must copy or itemstack becomes empty after adding inventory
             rewardCommands(player, reward)
             Pixeldex.INSTANCE.claimController.setClaimed(player, rewardLevel)
             MessageUtils.sendMessage(player, "Rewards for " +
