@@ -24,4 +24,11 @@ class CapabilityClaimController : ClaimController {
 
     override fun isLoginNotified(player: EntityPlayerMP): Boolean =
             player.getCapability(ClaimSerializer.CLAIM_CAPABILITY, null)!!.isLoginNotified
+
+    override fun setCatchNotified(player: EntityPlayerMP, notified: Boolean) {
+        player.getCapability(ClaimSerializer.CLAIM_CAPABILITY, null)!!.isCatchNotified = notified
+    }
+
+    override fun isCatchNotified(player: EntityPlayerMP): Boolean =
+            player.getCapability(ClaimSerializer.CLAIM_CAPABILITY, null)!!.isCatchNotified
 }

@@ -15,6 +15,7 @@ import qwbarch.pixelmon.pixeldex.ProgressChecker
 import qwbarch.pixelmon.pixeldex.config.ConfigHandler
 import qwbarch.pixelmon.pixeldex.config.ConfigParser
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RewardPresenter(configHandler: ConfigHandler) {
 
@@ -39,7 +40,7 @@ class RewardPresenter(configHandler: ConfigHandler) {
         if (ProgressChecker.hasUnclaimedRewards(player)) {
             val rewardLevel = claimedLevel.next()
             val reward = rewards[rewardLevel]!!
-            rewardItems(player, rewardLevel, reward.copy()) //Must copy or itemstack becomes empty after adding inventory
+            rewardItems(player, rewardLevel, reward)
             rewardCommands(player, reward)
             Pixeldex.INSTANCE.claimController.setClaimed(player, rewardLevel)
             MessageUtils.sendMessage(player, "Rewards for " +
@@ -53,11 +54,17 @@ class RewardPresenter(configHandler: ConfigHandler) {
     private fun rewardItems(player: EntityPlayerMP, rewardLevel: RewardLevel, reward: RewardData) {
         if (reward.items.isNotEmpty()) {
             val dropBuilder = CustomDropScreen.builder()
-            reward.items.forEach {
-                dropBuilder.addItem(it)
-            }
             Pixelmon.EVENT_BUS.register(object {
+
+                private val rewards: MutableList<ItemStack> = ArrayList()
                 private var count = 0
+
+                init {
+                    reward.items.forEach {
+                        rewards.add(it.copy()) //Must copy so that original does not become empty
+                    }
+                    dropBuilder.setItems(rewards)
+                }
 
                 private fun addItemToInventory(player: EntityPlayerMP, item: ItemStack) {
                     if (!player.addItemStackToInventory(item)) dropItem(player, item)
@@ -81,11 +88,11 @@ class RewardPresenter(configHandler: ConfigHandler) {
                     when (event.position) {
                         //Drop All
                         EnumPositionTriState.LEFT -> {
-                            reward.items.forEach { dropItem(event.player, it) }
+                            rewards.forEach { if (!it.isEmpty) dropItem(event.player, it) }
                         }
                         //Take All
                         EnumPositionTriState.RIGHT -> {
-                            reward.items.forEach { addItemToInventory(event.player, it) }
+                            rewards.forEach { if (!it.isEmpty) addItemToInventory(event.player, it) }
                         }
                     }
                     Pixelmon.EVENT_BUS.unregister(this)

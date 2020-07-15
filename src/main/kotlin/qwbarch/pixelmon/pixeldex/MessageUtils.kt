@@ -5,8 +5,17 @@ import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.util.text.TextComponentString
 import net.minecraft.util.text.TextFormatting
 import qwbarch.pixelmon.Pixeldex
+import java.text.DecimalFormat
 
 object MessageUtils {
+
+    private val decimalFormat = DecimalFormat("#.##")
+
+    fun sendProgressMessage(sender: ICommandSender, player: EntityPlayerMP) {
+        sendMessage(sender, "${if (sender === player) "You" else player.name} completed " +
+                "${TextFormatting.AQUA}${decimalFormat.format(ProgressChecker.checkProgress(player))}" +
+                "${TextFormatting.WHITE}% of their pok\u00e9dex")
+    }
 
     fun sendNonPlayerMessage(sender: ICommandSender) {
         sender.sendMessage(TextComponentString("This command is for players only."))
@@ -15,6 +24,10 @@ object MessageUtils {
     fun sendMessage(sender: ICommandSender, message: String) {
         sender.sendMessage(TextComponentString("[${TextFormatting.AQUA}${Pixeldex.MOD_NAME}" +
                 "${TextFormatting.WHITE}] $message"))
+    }
+
+    fun sendPlayerNotAvailable(sender: ICommandSender, player: String) {
+        sendMessage(sender, "The player $player is not available.")
     }
 
     fun sendUnclaimedRewardsMessage(player: EntityPlayerMP) {

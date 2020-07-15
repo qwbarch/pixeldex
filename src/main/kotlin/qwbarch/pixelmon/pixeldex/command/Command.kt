@@ -32,6 +32,7 @@ class BaseCommand : CommandTreeBase() {
     init {
         addSubcommand(CheckCommand())
         addSubcommand(ClaimCommand())
+        addSubcommand(CatchCommand())
         addSubcommand(LoginCommand())
         addSubcommand(RewardsCommand())
     }

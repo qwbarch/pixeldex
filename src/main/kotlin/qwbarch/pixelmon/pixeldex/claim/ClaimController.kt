@@ -10,4 +10,7 @@ interface ClaimController {
 
     fun setLoginNotified(player: EntityPlayerMP, notified: Boolean)
     fun isLoginNotified(player: EntityPlayerMP): Boolean
+
+    fun setCatchNotified(player: EntityPlayerMP, notified: Boolean)
+    fun isCatchNotified(player: EntityPlayerMP): Boolean
 }
