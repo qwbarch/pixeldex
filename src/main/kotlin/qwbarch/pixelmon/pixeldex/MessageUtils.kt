@@ -12,9 +12,18 @@ object MessageUtils {
     private val decimalFormat = DecimalFormat("#.##")
 
     fun sendProgressMessage(sender: ICommandSender, player: EntityPlayerMP) {
-        sendMessage(sender, "${if (sender === player) "You" else player.name} completed " +
+        var playerName: String
+        var pronoun: String
+        if (sender === player) {
+            playerName = "You"
+            pronoun = "your"
+        } else {
+            playerName = player.name
+            pronoun = "their"
+        }
+        sendMessage(sender, "$playerName completed " +
                 "${TextFormatting.AQUA}${decimalFormat.format(ProgressChecker.checkProgress(player))}" +
-                "${TextFormatting.WHITE}% of their pok\u00e9dex")
+                "${TextFormatting.WHITE}% of $pronoun pok\u00e9dex")
     }
 
     fun sendNonPlayerMessage(sender: ICommandSender) {

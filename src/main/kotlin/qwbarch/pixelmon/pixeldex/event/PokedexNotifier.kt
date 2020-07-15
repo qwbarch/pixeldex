@@ -19,7 +19,6 @@ object PokedexNotifier {
             if (ProgressChecker.hasUnclaimedRewards(player)) MessageUtils.sendUnclaimedRewardsMessage(player)
 
             //Notify all players on catch if it's enabled by that player
-            val decimalFormat = DecimalFormat("#.##")
             player.server.playerList.players.forEach {
                 if (Pixeldex.INSTANCE.claimController.isCatchNotified(it))
                     MessageUtils.sendProgressMessage(it, player)
