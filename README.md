@@ -1,5 +1,5 @@
 # Pixeldex
-[This mod](https://www.curseforge.com/minecraft/mc-mods/pixeldex/settings/description) is for use with Pixelmon Reforged.  
+[This mod](https://www.curseforge.com/minecraft/mc-mods/pixeldex/) is for use with Pixelmon Reforged.  
 Pixeldex is a mod inspired by Xenoyia's PokedexRewards mod. SimpleDexRewards did not cut it for me, so I made my own version with Xenoyia's version in mind.  
 
 Pixeldex rewards players per 10% completion of their pokedex. Rewards include items and commands, which is configurable by the server-owner.  
