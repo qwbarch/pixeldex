@@ -3,7 +3,6 @@ package qwbarch.pixelmon.pixeldex
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.util.text.TextComponentString
-import net.minecraft.util.text.TextFormatting
 import qwbarch.pixelmon.Pixeldex
 import java.text.DecimalFormat
 
@@ -25,8 +24,7 @@ object MessageUtils {
     }
 
     fun sendMessage(sender: ICommandSender, message: String) {
-        sender.sendMessage(TextComponentString("[${TextFormatting.AQUA}${Pixeldex.MOD_NAME}" +
-                "${TextFormatting.WHITE}] $message"))
+        sender.sendMessage(TextComponentString("${Pixeldex.INSTANCE.configHandler.messagePrefix} $message"))
     }
 
     fun sendPlayerNotAvailable(sender: ICommandSender, player: String) {

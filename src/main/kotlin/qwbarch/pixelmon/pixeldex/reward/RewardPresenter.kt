@@ -16,11 +16,15 @@ import qwbarch.pixelmon.pixeldex.config.ConfigParser
 import java.util.*
 import kotlin.collections.ArrayList
 
-class RewardPresenter(configHandler: ConfigHandler) {
+class RewardPresenter(private val configHandler: ConfigHandler) {
 
     private val rewards: MutableMap<RewardLevel, RewardData> = EnumMap(RewardLevel::class.java)
 
     init {
+        reload()
+    }
+
+    fun reload() {
         RewardLevel.values().forEach {
             if (it != RewardLevel.ZERO) {
                 Pixeldex.INSTANCE.logger.info("Loading ${it.value}% rewards")

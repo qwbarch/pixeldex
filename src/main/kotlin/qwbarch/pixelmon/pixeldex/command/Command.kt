@@ -36,6 +36,7 @@ class BaseCommand : CommandTreeBase() {
         addSubcommand(CatchCommand())
         addSubcommand(LoginCommand())
         addSubcommand(RewardsCommand())
+        addSubcommand(ReloadCommand())
     }
 
     override fun getName(): String = Pixeldex.MOD_ID

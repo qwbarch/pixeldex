@@ -1,5 +1,6 @@
 package qwbarch.pixelmon.pixeldex.config
 
+import net.minecraft.util.text.TextFormatting
 import org.ini4j.Ini
 import org.ini4j.Wini
 import qwbarch.pixelmon.Pixeldex
@@ -9,6 +10,7 @@ import java.io.File
 interface ConfigHandler {
 
     val commandAlias: String
+    val messagePrefix: String
 
     val catchNotifEnabledMessage: String
     val catchNotifDisabledMessage: String
@@ -32,7 +34,7 @@ interface ConfigHandler {
     fun getCommandRewards(level: RewardLevel): String
     fun getDescription(level: RewardLevel): String
 
-    fun reload(): Unit
+    fun reload()
 }
 
 class IniConfigHandler(private val file: File) : ConfigHandler {
@@ -44,13 +46,6 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
     private var commandSeparator: String
 
     init {
-        if (file.createNewFile()) {
-            setDefaultSettings()
-            setDefaultSeparators()
-            setDefaultRewards()
-            setDefaultMessages()
-            ini.store(file)
-        }
         reload()
 
         val separatorSection = ini[CATEGORY_SEPARATOR]!!
@@ -61,18 +56,26 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
     }
 
     private fun setDefaultSettings() {
-        val section = ini.add(CATEGORY_SETTINGS)
-        section.add(KEY_COMMAND_ALIAS, "pd")
+        if (!ini.contains(CATEGORY_SETTINGS)) {
+            val section = ini.add(CATEGORY_SETTINGS)
+            section.add(KEY_COMMAND_ALIAS, "pd")
+            section.add(KEY_MESSAGE_PREFIX, "[${TextFormatting.AQUA}Pixeldex${TextFormatting.WHITE}]")
+        }
     }
 
     private fun setDefaultSeparators() {
-        val separatorSection = ini.add(CATEGORY_SEPARATOR)!!
-        separatorSection.add(KEY_ITEM_SEPARATOR, "|")
-        separatorSection.putComment(KEY_ITEM_SEPARATOR, "This value is what separates each item. Default: |")
-        separatorSection.add(KEY_QUANTITY_SEPARATOR, ";")
-        separatorSection.putComment(KEY_QUANTITY_SEPARATOR, "This value is what separates an item's id and quantity. Default: ;")
-        separatorSection.add(KEY_COMMAND_SEPARATOR, "|")
-        separatorSection.putComment(KEY_COMMAND_SEPARATOR, "This value is what separates each command. Default: |")
+        if (!ini.contains(CATEGORY_SEPARATOR)) {
+            val separatorSection = ini.add(CATEGORY_SEPARATOR)!!
+            separatorSection.add(KEY_ITEM_SEPARATOR, "|")
+            separatorSection.putComment(KEY_ITEM_SEPARATOR,
+                    "This value is what separates each item. Default: |")
+            separatorSection.add(KEY_QUANTITY_SEPARATOR, ";")
+            separatorSection.putComment(KEY_QUANTITY_SEPARATOR,
+                    "This value is what separates an item's id and quantity. Default: ;")
+            separatorSection.add(KEY_COMMAND_SEPARATOR, "|")
+            separatorSection.putComment(KEY_COMMAND_SEPARATOR,
+                    "This value is what separates each command. Default: |")
+        }
     }
 
     private fun setDefaultRewards() {
@@ -107,38 +110,47 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
     }
 
     private fun setDefaultMessages() {
-        val section = ini.add(CATEGORY_MESSAGES)
-        section.add(KEY_CATCH_NOTIF_ENABLED, "Catch notifications enabled.")
-        section.add(KEY_CATCH_NOTIF_DISABLED, "Catch notifications disabled.")
-        section.add(KEY_LOGIN_NOTIF_ENABLED, "Login notifications enabled.")
-        section.add(KEY_LOGIN_NOTIF_DISABLED, "Login notifications disabled.")
-        section.add(KEY_NO_CLAIMABLE_REWARDS, "You do not have any available rewards to claim.")
-        section.add(KEY_INVALID_COMMAND_USAGE, "Correct usage: @usage")
-        section.putComment(KEY_INVALID_COMMAND_USAGE, "@usage is a placeholder for the command usage")
-        section.add(KEY_REWARD_DESCRIPTION, "Rewards for @rewardLevel% completion:\\n@rewardDescription")
-        section.putComment(KEY_REWARD_DESCRIPTION,
-                "@rewardLevel and @rewardDescription are placeholders for its respective reward information")
-        section.add(KEY_CLAIM_REWARD, "Rewards for @rewardLevel% completion claimed!")
-        section.add(KEY_REWARD_GUI_TITLE, "@rewardLevel% completion rewards")
-        section.add(KEY_SELF_PLAYER_PROGRESS, "You completed @progress of your pok\u00e9dex!")
-        section.putComment(KEY_SELF_PLAYER_PROGRESS,
-                "@progress is a placeholder for the player's pokedex progress")
-        section.add(KEY_OTHER_PLAYER_PROGRESS, "@playerName completed @progress of their pok\u00e9dex!")
-        section.add(KEY_PLAYER_UNAVAILABLE, "The player @playerName is not available.")
-        section.add(KEY_UNCLAIMED_REWARDS, "You have unclaimed rewards! For a list of sub-commands, type /@alias")
-        section.putComment(KEY_UNCLAIMED_REWARDS, "@alias is a placeholder for the command alias")
+        if (!ini.contains(CATEGORY_MESSAGES)) {
+            val section = ini.add(CATEGORY_MESSAGES)
+            section.add(KEY_CATCH_NOTIF_ENABLED, "Catch notifications enabled.")
+            section.add(KEY_CATCH_NOTIF_DISABLED, "Catch notifications disabled.")
+            section.add(KEY_LOGIN_NOTIF_ENABLED, "Login notifications enabled.")
+            section.add(KEY_LOGIN_NOTIF_DISABLED, "Login notifications disabled.")
+            section.add(KEY_NO_CLAIMABLE_REWARDS, "You do not have any available rewards to claim.")
+            section.add(KEY_INVALID_COMMAND_USAGE, "Correct usage: @usage")
+            section.putComment(KEY_INVALID_COMMAND_USAGE, "@usage is a placeholder for the command usage")
+            section.add(KEY_REWARD_DESCRIPTION, "Rewards for ${TextFormatting.AQUA}@rewardLevel" +
+                    "${TextFormatting.WHITE}% completion:\\n@rewardDescription")
+            section.putComment(KEY_REWARD_DESCRIPTION,
+                    "@rewardLevel and @rewardDescription are placeholders for its respective reward information")
+            section.add(KEY_CLAIM_REWARD, "Rewards for ${TextFormatting.AQUA}@rewardLevel" +
+                    "${TextFormatting.WHITE}% completion claimed!")
+            section.add(KEY_REWARD_GUI_TITLE, "@rewardLevel% completion rewards")
+            section.add(KEY_SELF_PLAYER_PROGRESS, "You completed ${TextFormatting.AQUA}@progress" +
+                    "${TextFormatting.WHITE}% of your pok\u00e9dex!")
+            section.putComment(KEY_SELF_PLAYER_PROGRESS,
+                    "@progress is a placeholder for the player's pokedex progress")
+            section.add(KEY_OTHER_PLAYER_PROGRESS, "@playerName completed ${TextFormatting.AQUA}@progress" +
+                    "${TextFormatting.WHITE}% of their pok\u00e9dex!")
+            section.add(KEY_PLAYER_UNAVAILABLE, "The player @playerName is not available.")
+            section.add(KEY_UNCLAIMED_REWARDS, "You have unclaimed rewards! For a list of sub-commands, type /@alias")
+            section.putComment(KEY_UNCLAIMED_REWARDS, "@alias is a placeholder for the command alias")
+        }
     }
 
     private fun setReward(ini: Ini, rewardLevel: String, items: String, commands: String, description: String) {
-        val section = ini.add(rewardLevel + CATEGORY_REWARD_SUFFIX)!!
-        section.add(KEY_ITEMS, items)
-        section.add(KEY_COMMANDS, commands)
-        section.add(KEY_DESCRIPTION, description)
+        if (!ini.contains(rewardLevel + CATEGORY_REWARD_SUFFIX)) {
+            val section = ini.add(rewardLevel + CATEGORY_REWARD_SUFFIX)!!
+            section.add(KEY_ITEMS, items)
+            section.add(KEY_COMMANDS, commands)
+            section.add(KEY_DESCRIPTION, description)
+        }
     }
 
     private fun replaceNewLines(text: String): String = text.replace("\\n", "\n")
 
-    override val commandAlias: String get() = ini[CATEGORY_SETTINGS]!![KEY_COMMAND_ALIAS]!!
+    override val commandAlias: String get() = ini[CATEGORY_SETTINGS, KEY_COMMAND_ALIAS]
+    override val messagePrefix: String get() = ini[CATEGORY_SETTINGS, KEY_MESSAGE_PREFIX]
 
     override val catchNotifEnabledMessage: String
         get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_CATCH_NOTIF_ENABLED])
@@ -182,7 +194,14 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
 
     override fun getDescription(level: RewardLevel): String = replaceNewLines(getReward(level, KEY_DESCRIPTION))
 
-    override fun reload(): Unit = ini.load(file)
+    override fun reload(): Unit {
+        if (!file.createNewFile()) ini.load(file)
+        setDefaultSettings()
+        setDefaultSeparators()
+        setDefaultRewards()
+        setDefaultMessages()
+        ini.store(file)
+    }
 
     companion object {
         private const val CATEGORY_SEPARATOR = "Separators"
@@ -212,5 +231,6 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
 
         private const val CATEGORY_SETTINGS = "Settings"
         private const val KEY_COMMAND_ALIAS = "CommandAlias"
+        private const val KEY_MESSAGE_PREFIX = "MessagePrefix"
     }
 }
