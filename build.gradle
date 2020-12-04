@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'kotlin'
 
 group = 'qwbarch.pixelmon'
-version = '1.0'
+version = '1.0.1-SNAPSHOT'
 archivesBaseName = 'pixeldex'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'

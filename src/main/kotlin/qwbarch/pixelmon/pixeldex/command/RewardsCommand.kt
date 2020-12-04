@@ -3,17 +3,18 @@ package qwbarch.pixelmon.pixeldex.command
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.server.MinecraftServer
-import net.minecraft.util.text.TextFormatting
 import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.MessageUtils
 import qwbarch.pixelmon.pixeldex.reward.RewardLevel
 
-class RewardsCommand : PDCommand("rewards", "/pd rewards 10|20|30|40|50|60|70|80|90|100") {
+class RewardsCommand : PDCommand("rewards",
+        "/${Pixeldex.INSTANCE.configHandler.commandAlias} rewards 10|20|30|40|50|60|70|80|90|100") {
 
     private fun sendDescriptionMessage(sender: ICommandSender, level: RewardLevel) {
-        MessageUtils.sendMessage(sender, "Rewards for ${TextFormatting.AQUA}${level.value}" +
-                "${TextFormatting.WHITE}% completion:\n"
-                + Pixeldex.INSTANCE.rewardPresenter.getDescription(level))
+        MessageUtils.sendMessage(sender, Pixeldex.INSTANCE.configHandler.rewardDescriptionMessage
+                .replace("@rewardLevel", level.value.toString())
+                .replace("@rewardDescription", Pixeldex.INSTANCE.rewardPresenter.getDescription(level))
+        )
     }
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<String>) {

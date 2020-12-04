@@ -5,7 +5,6 @@ import com.pixelmonmod.pixelmon.pokedex.Pokedex
 import net.minecraft.entity.player.EntityPlayerMP
 import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.reward.RewardLevel
-import java.text.DecimalFormat
 
 object ProgressChecker {
 

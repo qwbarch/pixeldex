@@ -12,18 +12,12 @@ object MessageUtils {
     private val decimalFormat = DecimalFormat("#.##")
 
     fun sendProgressMessage(sender: ICommandSender, player: EntityPlayerMP) {
-        var playerName: String
-        var pronoun: String
-        if (sender === player) {
-            playerName = "You"
-            pronoun = "your"
-        } else {
-            playerName = player.name
-            pronoun = "their"
-        }
-        sendMessage(sender, "$playerName completed " +
-                "${TextFormatting.AQUA}${decimalFormat.format(ProgressChecker.checkProgress(player))}" +
-                "${TextFormatting.WHITE}% of $pronoun pok\u00e9dex")
+        sendMessage(sender,
+                (if (sender === player) Pixeldex.INSTANCE.configHandler.selfPlayerProgressMessage
+                else Pixeldex.INSTANCE.configHandler.otherPlayerProgressMessage
+                        .replace("@playerName", player.name)
+                        ).replace("@progress", decimalFormat.format(ProgressChecker.checkProgress(player)))
+        )
     }
 
     fun sendNonPlayerMessage(sender: ICommandSender) {
@@ -36,11 +30,12 @@ object MessageUtils {
     }
 
     fun sendPlayerNotAvailable(sender: ICommandSender, player: String) {
-        sendMessage(sender, "The player $player is not available.")
+        sendMessage(sender, Pixeldex.INSTANCE.configHandler.playerUnavailableMessage
+                .replace("@playerName", player))
     }
 
     fun sendUnclaimedRewardsMessage(player: EntityPlayerMP) {
-        sendMessage(player, "You have unclaimed rewards! For a list of " +
-                "sub-commands, type /${Pixeldex.MOD_ID}")
+        sendMessage(player, Pixeldex.INSTANCE.configHandler.unclaimedRewardsMessage
+                .replace("@alias", Pixeldex.INSTANCE.configHandler.commandAlias))
     }
 }

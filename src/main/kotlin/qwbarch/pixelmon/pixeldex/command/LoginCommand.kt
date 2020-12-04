@@ -6,7 +6,8 @@ import net.minecraft.server.MinecraftServer
 import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.MessageUtils
 
-class LoginCommand : PDCommand("login", "/pd login show|hide") {
+class LoginCommand : PDCommand("login",
+        "/${Pixeldex.INSTANCE.configHandler.commandAlias} login show|hide") {
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<String>) {
         if (sender is EntityPlayerMP) {
@@ -14,11 +15,11 @@ class LoginCommand : PDCommand("login", "/pd login show|hide") {
                 when (args[0]) {
                     "show" -> {
                         Pixeldex.INSTANCE.claimController.setLoginNotified(sender, true)
-                        MessageUtils.sendMessage(sender, "Login notifications enabled.")
+                        MessageUtils.sendMessage(sender, Pixeldex.INSTANCE.configHandler.loginNotifEnabledMessage)
                     }
                     "hide" -> {
                         Pixeldex.INSTANCE.claimController.setLoginNotified(sender, false)
-                        MessageUtils.sendMessage(sender, "Login notifications disabled.")
+                        MessageUtils.sendMessage(sender, Pixeldex.INSTANCE.configHandler.loginNotifDisabledMessage)
                     }
                     else -> sendUsage(sender)
                 }

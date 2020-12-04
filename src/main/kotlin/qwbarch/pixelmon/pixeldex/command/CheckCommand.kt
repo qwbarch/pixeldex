@@ -3,9 +3,10 @@ package qwbarch.pixelmon.pixeldex.command
 import net.minecraft.command.ICommandSender
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.server.MinecraftServer
+import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.MessageUtils
 
-class CheckCommand : PDCommand("check", "/pd check") {
+class CheckCommand : PDCommand("check", "/${Pixeldex.INSTANCE.configHandler.commandAlias} check") {
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<String>) {
         if (sender is EntityPlayerMP) {

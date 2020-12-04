@@ -7,7 +7,6 @@ import com.pixelmonmod.pixelmon.api.events.drops.CustomDropsEvent
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
 import net.minecraft.util.text.TextComponentString
-import net.minecraft.util.text.TextFormatting
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.MessageUtils
@@ -43,9 +42,7 @@ class RewardPresenter(configHandler: ConfigHandler) {
             rewardItems(player, rewardLevel, reward)
             rewardCommands(player, reward)
             Pixeldex.INSTANCE.claimController.setClaimed(player, rewardLevel)
-            MessageUtils.sendMessage(player, "Rewards for " +
-                    "${TextFormatting.AQUA}${rewardLevel.value}" +
-                    "${TextFormatting.WHITE}% completion claimed!")
+            MessageUtils.sendMessage(player, Pixeldex.INSTANCE.configHandler.claimRewardMessage)
             return true
         }
         return false

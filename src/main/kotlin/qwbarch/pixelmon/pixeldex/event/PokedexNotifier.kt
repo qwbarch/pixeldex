@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.MessageUtils
 import qwbarch.pixelmon.pixeldex.ProgressChecker
-import java.text.DecimalFormat
 
 object PokedexNotifier {
 

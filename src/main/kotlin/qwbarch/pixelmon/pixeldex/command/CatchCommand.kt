@@ -6,7 +6,8 @@ import net.minecraft.server.MinecraftServer
 import qwbarch.pixelmon.Pixeldex
 import qwbarch.pixelmon.pixeldex.MessageUtils
 
-class CatchCommand : PDCommand("catch", "/pd catch show|hide") {
+class CatchCommand : PDCommand("catch",
+        "/${Pixeldex.INSTANCE.configHandler.commandAlias} catch show|hide") {
 
     override fun execute(server: MinecraftServer, sender: ICommandSender, args: Array<String>) {
         if (sender is EntityPlayerMP) {
@@ -14,11 +15,11 @@ class CatchCommand : PDCommand("catch", "/pd catch show|hide") {
                 when (args[0]) {
                     "show" -> {
                         Pixeldex.INSTANCE.claimController.setCatchNotified(sender, true)
-                        MessageUtils.sendMessage(sender, "Catch notifications enabled.")
+                        MessageUtils.sendMessage(sender, Pixeldex.INSTANCE.configHandler.catchNotifEnabledMessage)
                     }
                     "hide" -> {
                         Pixeldex.INSTANCE.claimController.setCatchNotified(sender, false)
-                        MessageUtils.sendMessage(sender, "Catch notifications disabled.")
+                        MessageUtils.sendMessage(sender, Pixeldex.INSTANCE.configHandler.catchNotifDisabledMessage)
                     }
                     else -> sendUsage(sender)
                 }

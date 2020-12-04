@@ -12,7 +12,8 @@ abstract class PDCommand(private val name: String,
                          private val permLevel: Int = 1) : CommandBase() {
 
     fun sendUsage(sender: ICommandSender) {
-        sender.sendMessage(TextComponentString("Correct usage: ${getUsage(sender)}"))
+        sender.sendMessage(TextComponentString(Pixeldex.INSTANCE.configHandler.invalidCommandUsageMessage
+                .replace("@usage", getUsage(sender))))
     }
 
     override fun getName(): String = name
@@ -27,7 +28,7 @@ abstract class PDCommand(private val name: String,
 
 class BaseCommand : CommandTreeBase() {
 
-    private val aliases = mutableListOf("pd")
+    private val aliases = arrayListOf(Pixeldex.INSTANCE.configHandler.commandAlias)
 
     init {
         addSubcommand(CheckCommand())
@@ -45,5 +46,5 @@ class BaseCommand : CommandTreeBase() {
         return sender.canUseCommand(1, "${Pixeldex.MOD_ID}.command.base")
     }
 
-    override fun getAliases(): MutableList<String> = aliases
+    override fun getAliases(): List<String> = aliases
 }
