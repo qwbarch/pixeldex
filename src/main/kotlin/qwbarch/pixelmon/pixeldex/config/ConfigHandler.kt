@@ -49,10 +49,10 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
             setDefaultSeparators()
             setDefaultRewards()
             setDefaultMessages()
+            ini.store(file)
         }
         reload()
 
-        //Load separators
         val separatorSection = ini[CATEGORY_SEPARATOR]!!
         itemSeparator = separatorSection[KEY_ITEM_SEPARATOR]!!
         quantitySeparator = separatorSection[KEY_QUANTITY_SEPARATOR]!!
@@ -107,7 +107,7 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
     }
 
     private fun setDefaultMessages() {
-        val section = ini.add("CatchNotifEnabled")
+        val section = ini.add(CATEGORY_MESSAGES)
         section.add(KEY_CATCH_NOTIF_ENABLED, "Catch notifications enabled.")
         section.add(KEY_CATCH_NOTIF_DISABLED, "Catch notifications disabled.")
         section.add(KEY_LOGIN_NOTIF_ENABLED, "Login notifications enabled.")
@@ -136,21 +136,36 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
         section.add(KEY_DESCRIPTION, description)
     }
 
+    private fun replaceNewLines(text: String): String = text.replace("\\n", "\n")
+
     override val commandAlias: String get() = ini[CATEGORY_SETTINGS]!![KEY_COMMAND_ALIAS]!!
 
-    override val catchNotifEnabledMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_CATCH_NOTIF_ENABLED]!!
-    override val catchNotifDisabledMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_CATCH_NOTIF_DISABLED]!!
-    override val loginNotifEnabledMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_LOGIN_NOTIF_ENABLED]!!
-    override val loginNotifDisabledMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_LOGIN_NOTIF_DISABLED]!!
-    override val noClaimableRewardsMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_NO_CLAIMABLE_REWARDS]!!
-    override val invalidCommandUsageMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_INVALID_COMMAND_USAGE]!!
-    override val rewardDescriptionMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_REWARD_DESCRIPTION]!!
-    override val claimRewardMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_CLAIM_REWARD]!!
-    override val rewardGUITitleMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_REWARD_GUI_TITLE]!!
-    override val selfPlayerProgressMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_SELF_PLAYER_PROGRESS]!!
-    override val otherPlayerProgressMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_OTHER_PLAYER_PROGRESS]!!
-    override val playerUnavailableMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_PLAYER_UNAVAILABLE]!!
-    override val unclaimedRewardsMessage: String get() = ini[CATEGORY_MESSAGES]!![KEY_UNCLAIMED_REWARDS]!!
+    override val catchNotifEnabledMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_CATCH_NOTIF_ENABLED])
+    override val catchNotifDisabledMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_CATCH_NOTIF_DISABLED])
+    override val loginNotifEnabledMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_LOGIN_NOTIF_ENABLED])
+    override val loginNotifDisabledMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_LOGIN_NOTIF_DISABLED])
+    override val noClaimableRewardsMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_NO_CLAIMABLE_REWARDS])
+    override val invalidCommandUsageMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_INVALID_COMMAND_USAGE])
+    override val rewardDescriptionMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_REWARD_DESCRIPTION])
+    override val claimRewardMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_CLAIM_REWARD])
+    override val rewardGUITitleMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_REWARD_GUI_TITLE])
+    override val selfPlayerProgressMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_SELF_PLAYER_PROGRESS])
+    override val otherPlayerProgressMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_OTHER_PLAYER_PROGRESS])
+    override val playerUnavailableMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_PLAYER_UNAVAILABLE])
+    override val unclaimedRewardsMessage: String
+        get() = replaceNewLines(ini[CATEGORY_MESSAGES, KEY_UNCLAIMED_REWARDS])
 
     override fun getItemSeparator() = itemSeparator
 
@@ -158,20 +173,14 @@ class IniConfigHandler(private val file: File) : ConfigHandler {
 
     override fun getCommandSeparator() = commandSeparator
 
-    private fun get(level: RewardLevel, key: String): String {
-        val section = ini[level.value.toString() + CATEGORY_REWARD_SUFFIX] ?: return ""
-        return section[key] ?: ""
-    }
+    private fun getReward(level: RewardLevel, key: String): String =
+            ini[level.value.toString() + CATEGORY_REWARD_SUFFIX, key]
 
-    override fun getItemRewards(level: RewardLevel): String = get(level, KEY_ITEMS)
+    override fun getItemRewards(level: RewardLevel): String = getReward(level, KEY_ITEMS)
 
-    override fun getCommandRewards(level: RewardLevel): String = get(level, KEY_COMMANDS)
+    override fun getCommandRewards(level: RewardLevel): String = getReward(level, KEY_COMMANDS)
 
-    override fun getDescription(level: RewardLevel): String {
-        var description = get(level, KEY_DESCRIPTION)
-        if (description.isNotEmpty()) description = description.replace("\\n", "\n")
-        return description
-    }
+    override fun getDescription(level: RewardLevel): String = replaceNewLines(getReward(level, KEY_DESCRIPTION))
 
     override fun reload(): Unit = ini.load(file)
 
