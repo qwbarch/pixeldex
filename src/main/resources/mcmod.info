@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "pixeldex",
+    "name": "Pixeldex",
+    "description": "Rewards players based on their pokedex completion",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "qwbarch"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
